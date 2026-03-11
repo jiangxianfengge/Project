@@ -190,3 +190,35 @@ $ git add Git学习：/
 首次推送可能会弹出SSH验证提示，输入`yes`即可；
 
 执行后若输出`Writing objects: 100% (x/x), done.`，说明推送成功！
+
+
+
+
+
+
+
+---
+
+# 三、拉取文件到本地：
+
+语法：`git clone <仓库地址> <目标路径>`。
+
+但是当路径已经存在且非空，那么为了防止覆盖文件，会拒绝克隆操作。
+
+==当我们想要保留已有文件夹里的内容，同时把Git仓库的代码加进去：==
+
+```python
+# 第一步：进入目标文件夹
+cd D:/Self_Study/大模型学习
+
+# 第二步：初始化 Git 仓库（如果还没初始化）
+git init
+
+# 第三步：关联远程仓库
+git remote add origin git@github.com:jiangxianfengge/Self_Study.git
+
+# 第四步：拉取仓库代码（如果有冲突会提示，按提示处理）
+git pull origin main
+# 如果仓库默认分支是 master，就用 git pull origin master
+```
+
