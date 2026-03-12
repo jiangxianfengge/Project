@@ -185,7 +185,7 @@ $ git add Git学习：/
 
 ==推送到GitHub远程仓库：==
 
-`git push -u origin main`
+`git push -u origin master`
 
 首次推送可能会弹出SSH验证提示，输入`yes`即可；
 
@@ -218,7 +218,74 @@ git init
 git remote add origin git@github.com:jiangxianfengge/Self_Study.git
 
 # 第四步：拉取仓库代码（如果有冲突会提示，按提示处理）
-git pull origin main
+git pull origin master
 # 如果仓库默认分支是 master，就用 git pull origin master
 ```
 
+## 两台设备之间的同步问题：
+
+当本地文件和仓库中的文件存在修改时，要是直接使用`git pull origin master`，那么会出现以下问题：
+
+```
+jiang@ҷ MINGW64 /d/Notebook (master) $ git pull origin master remote: Enumerating objects: 7, done. remote: Counting objects: 100% (7/7), done. remote: Compressing objects: 100% (3/3), done. remote: Total 4 (delta 1), reused 4 (delta 1), pack-reused 0 (from 0) Unpacking objects: 100% (4/4), 929 bytes | 23.00 KiB/s, done. From github.com:jiangxianfengge/Self_Study * branch master -> FETCH_HEAD 61bf58c..3b9ec22 master -> origin/master Updating 61bf58c..3b9ec22 
+error: Your local changes to the following files would be overwritten by merge: Git学习：/git学习.md Please commit your changes or stash them before you merge. Aborting
+```
+
+`error: Your local changes to the following files would be overwritten by merge: Git学习：/git学习.md Please commit your changes or stash them before you merge. Aborting`
+
+这个错误表示本地的文件存在修改，但是还没有提高，因此在执行`git pull`时，若直接合并远程的更新**会导致本地的修改被覆盖**。Git要求在合并前先处理这些本地的修改。
+
+==有以下几种处理方式：==
+
+### 1、提交本地修改：
+
+若希望保持本地修改，那么就可以将它们先提交到本地仓库，再执行`git pull`合并远程更新：
+
+```Bash
+git add .
+git commit -m "保存本地修改"
+git pull origin master
+```
+
+
+
+## 2、暂存本地修改（stash）：
+
+若不想立刻提交本地修改，但也希望执行`git pull`来合并远程的更改，可以使用`git stash`命令暂存本地的修改，然后进行拉取：
+
+```bash
+git stash
+git pull origin master
+```
+
+这样，Git会将修改暂存起来，拉取远程更新后，可以恢复暂存的修改：
+
+```bash
+git stash pop
+```
+
+
+
+### 3、放弃本地修改：
+
+若确定不需要保留本地修改，可以通过丢弃本地的修改，直接执行`git pull`：
+
+```bash
+git checkout -- <file>
+git pull origin master
+```
+
+若丢弃所有本地修改，可以用：
+
+```bash
+git reset --hard
+git pull origin master
+```
+
+
+
+### 总结：
+
+- 提交本地修改：git add . -> git commit -m "保存本地修改" -> git pull origin master
+-  暂存本地修改：git stash -> git pull origin master -> git stash pop
+-  放弃本地修改：git reset --hard -> git pull origin master
